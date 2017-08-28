@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+   name: shadowsocks-server
+   labels: 
+     name: shadowsocks-server
+spec:
+  replicas: 1
+  selector:
+     name: shadowsocks
+  template: 
+    metadata:
+     labels:
+       name: shadowsocks
+    spec:
+      containers:
+      - name: shadowsocks
+        image: yanheven/ssocks
+        command: ["nohup"]
+        args: ["python","shadowsocks-2.9.0/shadowsocks/server.py","-k","123456"]
+        ports:
+        - containerPort: 8388
