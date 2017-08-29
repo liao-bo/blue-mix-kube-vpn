@@ -1,8 +1,7 @@
-CONTAINER_CLUSTER="my_cluster"
-VPN_PORT="30001"
-VPN_PW="123456"
-
 #!/bin/bash
+DIR=$(cd `dirname $0`; pwd)
+sh $DIR/config.sh
+
 command_exists() {
 	command -v "$@" > /dev/null 2>&1
 }
@@ -63,9 +62,11 @@ bx cs cluster-config my_cluster >kube_env.txt
 sh ./kube_env.txt
 
 #deployment kubenetes vpn replicat
-sed 
+sed -i 's/\(-k","\).*\("]$\)/\1'${VPN_PW}'\2/' $DIR/bx-kube-replicat.yaml
 kubectl apply -f bx-kube-replicat.yaml
 
+#deployment kubenetes vpn service network
+sed -i 's/\(nodePort: \)[0-9]*$/\1'${VPN_PORT}'/' $DIR/bx-kube-service.yaml 
 kubectl apply -f bx-kube-service.yaml
 
 nc -vz $CLUSTER_IP $VPN_PORT >/dev/null 2>&1
@@ -76,5 +77,6 @@ else
         echo "VPN ip address is $CONTAINER_IP"
         echo "VPN port is $VPN_PORT"
         echo "VPN password is $VPN_PW"
+        echo "VPN encryption type defautl is aes-256-cfb"
 	fi
 fi
