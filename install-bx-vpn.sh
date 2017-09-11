@@ -1,6 +1,9 @@
 #!/bin/bash
+set -e
+
 DIR=$(cd `dirname $0`; pwd)
-sh $DIR/config.sh
+
+source $DIR/config.sh
 
 command_exists() {
 	command -v "$@" > /dev/null 2>&1
@@ -59,7 +62,7 @@ for((i=1;i<100;i++));do
 done
     
 bx cs cluster-config my_cluster >kube_env.txt
-sh ./kube_env.txt
+source ./kube_env.txt
 
 #deployment kubenetes vpn replicat
 sed -i 's/\(-k","\).*\("]$\)/\1'${VPN_PW}'\2/' $DIR/bx-kube-replicat.yaml
