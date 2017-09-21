@@ -37,14 +37,17 @@ fi
 
 #check whether install kubenetes CLI
 if ! command_exists kubectl;then
+    wget https://github.com/liao-bo/kubectl/archive/1.5.6.tar.gz
+    tar xzvf 1.5.6.tar.gz
+    KUBE_PATH='/usr/local/bin/kubectl'
     if [[ $OS_VERSION -eq "MAC" ]];then
-        curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.5.6/bin/darwin/amd64/kubectl
+        sudo mv ./kubectl-1.5.6/darwin-V1.5.6/kubectl $KUBE_PATH
     elif [[ $OS_VERSION -eq "LINUX" ]];then
-        curl -LO http://storage.googleapis.com/kubernetes-release/release/v1.5.6/bin/linux/amd64/kubectl
+        sudo mv ./kubectl-1.5.6/linux-V1.5.6/kubectl $KUBE_PATH
     else
         exit 1
     fi
-    chmod +x ./kubectl && sudo mv ./kubectl /usr/local/bin/kubectl
+    chmod +x $KUBE_PATH 
 fi
 
 
