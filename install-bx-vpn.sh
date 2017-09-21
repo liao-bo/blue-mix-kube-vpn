@@ -21,9 +21,9 @@ fi
  
 #check whether install bluemix CLI
 if ! command_exists bx;then
-    if [ $OS_VERSION -eq "MAC" ];then
+    if [[ $OS_VERSION -eq "MAC" ]];then
         sh <(curl -fsSL https://clis.ng.bluemix.net/install/osx)
-    elif [ $OS_VERSION -eq "LINUX" ];then
+    elif [[ $OS_VERSION -eq "LINUX" ]];then
         sh <(curl -fsSL https://clis.ng.bluemix.net/install/linux)
     else
         exit 1
