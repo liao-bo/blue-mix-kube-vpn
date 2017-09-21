@@ -12,6 +12,7 @@ command_exists() {
 #check OS whether MAC or LINUX
 if command_exists sw_vers;then
     OS_VERSION="MAC"
+    $SED_BAK=".bak"
 elif cat /proc/version|grep 'Linux' 2>&1 >/dev/null;then
     OS_VERSION="LINUX"
 else 
@@ -78,12 +79,12 @@ source ./kube_env.txt
 
 #deployment kubenetes vpn replicat
 echo "deploying kube replicat"
-sed -i '' 's/\(-k","\).*\("]$\)/\1'${VPN_PW}'\2/' $DIR/bx-kube-replicat.yaml
+sed -i $SED_BAK 's/\(-k","\).*\("]$\)/\1'${VPN_PW}'\2/' $DIR/bx-kube-replicat.yaml
 kubectl apply -f bx-kube-replicat.yaml
 
 #deployment kubenetes vpn service network
 echo "deploying kube service"
-sed -i '' 's/\(nodePort: \)[0-9]*$/\1'${VPN_PORT}'/' $DIR/bx-kube-service.yaml 
+sed -i $SED_BAK 's/\(nodePort: \)[0-9]*$/\1'${VPN_PORT}'/' $DIR/bx-kube-service.yaml 
 kubectl apply -f bx-kube-service.yaml
 
 nc -vz $CLUSTER_IP $VPN_PORT >/dev/null 2>&1
