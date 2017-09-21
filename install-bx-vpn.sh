@@ -50,26 +50,37 @@ fi
 
 bx login -a api.ng.bluemix.net
 bx cs init --host https://us-south.containers.bluemix.net
-bx cs cluster-create --name $CONTAINER_CLUSTER
-sleep 20
-echo "waiting create container cluster "
+bx target --cf
+bx iam orgs
+bx iam spaces
+echo "cluster name is $CONTAINER_CLUSTER"
+if ! bx cs clusters|grep $CONTAINER_CLUSTER 2>&1 >/dev/null;then
+   bx cs cluster-create --name $CONTAINER_CLUSTER
+   sleep 20
+   echo "waiting create container cluster "
+fi
 for((i=1;i<100;i++));do
-    if bx cs workers $CONTAINER_CLUSTER|grep Ready;then
-        CLUSTER_IP=`bx cs workers mycluster|grep Ready|head -n 1|awk '{print $2}'`
+    if bx cs clusters|grep $CONTAINER_CLUSTER|grep normal;then
+        CLUSTER_IP=`bx cs workers $CONTAINER_CLUSTER|grep Ready|head -n 1|awk '{print $2}'`
+        break
     else
-        echo"....waiting"
+        sleep 5
+        echo "....waiting"
+        echo `bx cs clusters|grep $CONTAINER_CLUSTER`
     fi
 done
     
-bx cs cluster-config my_cluster >kube_env.txt
+bx cs cluster-config my_cluster|grep export >kube_env.txt
 source ./kube_env.txt
 
 #deployment kubenetes vpn replicat
-sed -i 's/\(-k","\).*\("]$\)/\1'${VPN_PW}'\2/' $DIR/bx-kube-replicat.yaml
+echo "deploying kube replicat"
+sed -i '' 's/\(-k","\).*\("]$\)/\1'${VPN_PW}'\2/' $DIR/bx-kube-replicat.yaml
 kubectl apply -f bx-kube-replicat.yaml
 
 #deployment kubenetes vpn service network
-sed -i 's/\(nodePort: \)[0-9]*$/\1'${VPN_PORT}'/' $DIR/bx-kube-service.yaml 
+echo "deploying kube service"
+sed -i '' 's/\(nodePort: \)[0-9]*$/\1'${VPN_PORT}'/' $DIR/bx-kube-service.yaml 
 kubectl apply -f bx-kube-service.yaml
 
 nc -vz $CLUSTER_IP $VPN_PORT >/dev/null 2>&1
@@ -77,9 +88,8 @@ if [ $? -eq 1 ]; then
 	echo "VPN deployment failed"
 else 
         echo "VPN deployment successed"
-        echo "VPN ip address is $CONTAINER_IP"
+        echo "VPN ip address is $CLUSTER_IP"
         echo "VPN port is $VPN_PORT"
         echo "VPN password is $VPN_PW"
         echo "VPN encryption type defautl is aes-256-cfb"
-	fi
 fi

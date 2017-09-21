@@ -1,0 +1,1 @@
+export KUBECONFIG=/Users/liaobo/.bluemix/plugins/container-service/clusters/my_cluster/kube-config-hou02-my_cluster.yml
