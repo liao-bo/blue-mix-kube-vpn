@@ -37,9 +37,9 @@ fi
 
 #check whether install kubenetes CLI
 if ! command_exists kubectl;then
-    if [ $OS_VERSION -eq "MAC" ];then
+    if [[ $OS_VERSION -eq "MAC" ]];then
         curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.5.6/bin/darwin/amd64/kubectl
-    elif [ $OS_VERSION -eq "LINUX" ];then
+    elif [[ $OS_VERSION -eq "LINUX" ]];then
         curl -LO http://storage.googleapis.com/kubernetes-release/release/v1.5.6/bin/linux/amd64/kubectl
     else
         exit 1
