@@ -12,7 +12,7 @@ command_exists() {
 #check OS whether MAC or LINUX
 if command_exists sw_vers;then
     OS_VERSION="MAC"
-    $SED_BAK=".bak"
+    SED_BAK=".bak"
 elif cat /proc/version|grep 'Linux' 2>&1 >/dev/null;then
     OS_VERSION="LINUX"
 else 
@@ -22,9 +22,9 @@ fi
 echo "$OS_VERSION"
 #check whether install bluemix CLI
 if ! command_exists bx;then
-    if [[ $OS_VERSION -eq "MAC" ]];then
+    if [ $OS_VERSION == "MAC" ];then
         sh <(curl -fsSL https://clis.ng.bluemix.net/install/osx)
-    elif [[ $OS_VERSION -eq "LINUX" ]];then
+    elif [ $OS_VERSION == "LINUX" ];then
         sh <(curl -fsSL https://clis.ng.bluemix.net/install/linux)
     else
         exit 1
@@ -41,9 +41,9 @@ if ! command_exists kubectl;then
     wget https://github.com/liao-bo/kubectl/archive/1.5.6.tar.gz
     tar xzvf 1.5.6.tar.gz
     KUBE_PATH='/usr/local/bin/kubectl'
-    if [[ $OS_VERSION -eq "MAC" ]];then
+    if [ $OS_VERSION == "MAC" ];then
         sudo mv ./kubectl-1.5.6/darwin-V1.5.6/kubectl $KUBE_PATH
-    elif [[ $OS_VERSION -eq "LINUX" ]];then
+    elif [ $OS_VERSION == "LINUX" ];then
         sudo mv ./kubectl-1.5.6/linux-V1.5.6/kubectl $KUBE_PATH
     else
         exit 1
