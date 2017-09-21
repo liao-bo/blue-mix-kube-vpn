@@ -1,6 +1,6 @@
 
 #sed -i 's/\(-k","\).*\("]$\)/\1'aaaaaa'\2/' bx-kube-replicat.yaml
-OS_VERSION="LINUX"
+OS_VERSION="1111"
 if [[ $OS_VERSION -eq "MAC" ]];then
         #sh <(curl -fsSL https://clis.ng.bluemix.net/install/osx)
         echo "111"
