@@ -10,7 +10,7 @@ command_exists() {
 }
 
 #check OS whether MAC or LINUX
-if sw_vers|grep Mac 2>&1 >/dev/null;then
+if command_exists sw_vers;then
     OS_VERSION="MAC"
 elif cat /proc/version|grep 'Linux' 2>&1 >/dev/null;then
     OS_VERSION="LINUX"
