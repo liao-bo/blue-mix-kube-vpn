@@ -53,8 +53,9 @@ fi
 
 echo "Please input you bluemix account(Email) and the password" 
 bx login -a api.ng.bluemix.net
-bx cs init --host https://us-south.containers.bluemix.net
 bx target --cf
+bx cs init --host https://us-south.containers.bluemix.net
+
 bx iam orgs
 bx iam spaces
 echo "cluster name is $CONTAINER_CLUSTER"
