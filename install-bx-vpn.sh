@@ -87,7 +87,11 @@ echo "deploying kube service"
 sed -i $SED_BAK 's/\(nodePort: \)[0-9]*$/\1'${VPN_PORT}'/' $DIR/bx-kube-service.yaml 
 kubectl apply -f bx-kube-service.yaml
 
-nc -vz $CLUSTER_IP $VPN_PORT >/dev/null 2>&1
+if command_exists nc;then
+    yum install -f nc
+fi
+
+nc -v $CLUSTER_IP $VPN_PORT >/dev/null 2>&1
 if [ $? -eq 1 ]; then
 	echo "VPN deployment failed"
 else 
