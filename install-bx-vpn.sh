@@ -19,7 +19,7 @@ else
     echo "Can't varify the OS version,the script only support MAC or LINUX"
     exit 1
 fi
-echo "$OS_VERSION"
+echo "You OS is $OS_VERSION"
 #check whether install bluemix CLI
 if ! command_exists bx;then
     if [ $OS_VERSION == "MAC" ];then
